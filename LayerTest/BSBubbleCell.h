@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, BSBubbleCellSideType) {
 @property (nonatomic) NSString *message;
 @property (nonatomic) BSBubbleCellSideType sideType;
 
++ (CGFloat)heightForMessage:(NSString *)message;
 - (void)configure;
 
 @end

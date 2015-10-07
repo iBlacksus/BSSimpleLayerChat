@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06863EA41BC52B780082750E /* BSMessageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06863EA31BC52B780082750E /* BSMessageHelper.m */; settings = {ASSET_TAGS = (); }; };
 		06EF5D0E1BC43794007EC711 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EF5D0D1BC43794007EC711 /* main.m */; };
 		06EF5D111BC43794007EC711 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EF5D101BC43794007EC711 /* AppDelegate.m */; };
 		06EF5D141BC43794007EC711 /* BSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EF5D131BC43794007EC711 /* BSViewController.m */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06863EA21BC52B780082750E /* BSMessageHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSMessageHelper.h; sourceTree = "<group>"; };
+		06863EA31BC52B780082750E /* BSMessageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSMessageHelper.m; sourceTree = "<group>"; };
 		06EF5D091BC43794007EC711 /* BSSimpleLayerChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSSimpleLayerChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06EF5D0D1BC43794007EC711 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		06EF5D0F1BC43794007EC711 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -110,6 +113,8 @@
 				06EF5D241BC46525007EC711 /* BSLayerManager.m */,
 				06EF5D2E1BC48407007EC711 /* BSBubbleManager.h */,
 				06EF5D2F1BC48407007EC711 /* BSBubbleManager.m */,
+				06863EA21BC52B780082750E /* BSMessageHelper.h */,
+				06863EA31BC52B780082750E /* BSMessageHelper.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -192,6 +197,7 @@
 				TargetAttributes = {
 					06EF5D081BC43794007EC711 = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = 9VUB6L23QH;
 					};
 				};
 			};
@@ -270,6 +276,7 @@
 				06EF5D2D1BC46C28007EC711 /* BSBubbleCell.m in Sources */,
 				06EF5D111BC43794007EC711 /* AppDelegate.m in Sources */,
 				06EF5D0E1BC43794007EC711 /* main.m in Sources */,
+				06863EA41BC52B780082750E /* BSMessageHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +388,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LayerTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iBlacksus.SimpleLayerChat;
@@ -394,6 +402,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LayerTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iBlacksus.SimpleLayerChat;

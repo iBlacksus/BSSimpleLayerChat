@@ -10,14 +10,12 @@
 #import "BSLayerManager.h"
 #import "BSBubbleCell.h"
 #import "BSBubbleManager.h"
-
-static NSString * const kMessageOne = @"Lorem ipsum...";
-static NSString * const kMessageTwo = @"Vestibulum dapibus, lacus eget aliquam gravida, ipsum nisi tristique ex, a pretium erat diam efficitur urna. Morbi a hendrerit metus.";
-static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non finibus. Vestibulum rutrum blandit massa, vehicula volutpat ligula dapibus vitae. Curabitur posuere, lectus nec vehicula ultrices, nulla felis ultrices nisi, a finibus augue urna id turpis. Etiam tempor facilisis maximus. Nulla et varius libero. Nunc commodo ut massa quis lacinia. Sed porttitor diam elit, in blandit quam placerat sit amet. Maecenas at elit non risus aliquam laoreet. Cras ullamcorper, odio quis consequat porta, nibh libero vestibulum diam, eu ullamcorper eros diam vitae tellus. Curabitur eros felis, iaculis pulvinar ligula ut, vestibulum lobortis nibh. Vestibulum laoreet est turpis, a fermentum ex luctus quis. Mauris at enim at justo eleifend dapibus.";
+#import "BSMessageHelper.h"
 
 @interface BSViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic, retain) LYRQueryController *queryController;
@@ -36,12 +34,12 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
 {
     [super viewDidLoad];
     
+    self.title = @"Loading...";
+    
     if (!layerAppID.length) {
         [self showError:[NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Set your Layer App ID in BSLayerManager!"}]];
         return;
     }
-    
-    [self configureTableView];
     
     [[BSLayerManager sharedManager] connectWithCompletion:^(NSError *error) {
         if (error) {
@@ -70,6 +68,14 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
     }
     
     return [self.queryController numberOfObjectsInSection:0];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    LYRMessage *message = [self.queryController objectAtIndexPath:indexPath];
+    LYRMessagePart *messagePart = message.parts.firstObject;
+    
+    return [BSBubbleCell heightForMessage:[[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -130,8 +136,7 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
 - (void)queryControllerDidChangeContent:(LYRQueryController *)queryController
 {
     [self.tableView endUpdates];
-//    [self scrollToBottom];
-    [self.tableView reloadData];
+    [self scrollToBottom];
     
 }
 
@@ -150,14 +155,13 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
 - (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
     [self fetchLayerConversation];
-//    [self scrollToBottom];
 }
 
 #pragma mark - Actions -
 
 - (IBAction)add:(id)sender
 {
-    NSString *messageText = [self randomMessage];
+    NSString *messageText = [BSMessageHelper randomMessage];
     
     if (!self.conversation) {
         [self fetchLayerConversation];
@@ -203,7 +207,7 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
         }
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:numberOfRows-1 inSection:0];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
     }
 }
@@ -263,11 +267,6 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
     if (!self.queryController) {
         [self setupQueryController];
     }
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-        [self scrollToBottom];
-    });
 }
 
 - (void)setupQueryController
@@ -277,12 +276,7 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
     
     [self.tableView reloadData];
     [self.conversation markAllMessagesAsRead:nil];
-}
-
-- (void)configureTableView
-{
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    self.tableView.estimatedRowHeight = 44.f;
+    [self scrollToBottom];
 }
 
 - (void)showError:(NSError *)error
@@ -295,6 +289,7 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
 - (void)askUserID
 {
     if ([BSLayerManager sharedManager].layerClient.authenticatedUserID) {
+        [self userAuthenticated];
         [self fetchLayerConversation];
         return;
     }
@@ -317,20 +312,15 @@ static NSString * const kMessageThree = @"Aenean vulputate commodo tortor non fi
             return;
         }
         
+        [self userAuthenticated];
         [self fetchLayerConversation];
     }];
 }
 
-- (NSString *)randomMessage
+- (void)userAuthenticated
 {
-    NSInteger randomInteger = rand() % 3;
-    
-    switch (randomInteger) {
-        case 0: return kMessageOne;
-        case 1: return kMessageTwo;
-        case 2: return kMessageThree;
-        default: return kMessageOne;
-    }
+    self.title = [BSLayerManager sharedManager].layerClient.authenticatedUserID;
+    self.addButton.enabled = YES;
 }
 
 #pragma mark - Segues -
